@@ -15,6 +15,7 @@ class _PackageScreenState extends State<PackageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: textColorWhite,
       body: SafeArea(
         child: Center(
           child: TextWidget(
