@@ -26,252 +26,237 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Consumer2<FutureDataProvider, ConnectivityProvider>(
         builder: (context, dataProvider, connectivity, child) {
-      return connectivity.isOnline
-          ? Scaffold(
-              backgroundColor: textColorWhite,
-              body: SafeArea(
-                child: FutureBuilder(
-                    future: dataProvider.homeData,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState != ConnectionState.done) {
-                        return SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              categoryShimmer(1, 4),
-                              sliderShimmer(context),
-                              topSellerShimmer(context, 8),
-                              topSellerShimmer(context, 8)
-                            ],
-                          ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return EmptyScreen();
-                      } else if (snapshot.hasData) {
-                        final homeDataResponse =
-                            homeDataResponseFromJson(snapshot.data.toString());
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                            left: 36,
-                          ),
-                          child: NotificationListener<ScrollNotification>(
-                            onNotification: (scrollNotification) {
-                              if (scrollNotification.metrics.pixels > 2) {
-                                if (dataProvider.appbarVisibility) {
-                                  dataProvider.appBarInvisible();
-                                }
-                              } else {
-                                dataProvider.appbarVisible();
-                              }
+      return Scaffold(
+        backgroundColor: textColorWhite,
+        body: SafeArea(
+          child: FutureBuilder(
+              future: dataProvider.homeData,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        categoryShimmer(1, 4),
+                        sliderShimmer(context),
+                        topSellerShimmer(context, 8),
+                        topSellerShimmer(context, 8)
+                      ],
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return EmptyScreen();
+                } else if (snapshot.hasData) {
+                  final homeDataResponse =
+                      homeDataResponseFromJson(snapshot.data.toString());
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                      left: 36,
+                    ),
+                    child: NotificationListener<ScrollNotification>(
+                      onNotification: (scrollNotification) {
+                        if (scrollNotification.metrics.pixels > 2) {
+                          if (dataProvider.appbarVisibility) {
+                            dataProvider.appBarInvisible();
+                          }
+                        } else {
+                          dataProvider.appbarVisible();
+                        }
 
-                              return true;
-                            },
-                            child: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                          height: 53,
-                                          width: 53,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(26),
-                                              border: Border.all(
-                                                  color: primaryColors,
-                                                  width: 1)),
-                                          child: Image(
-                                            image: AssetImage(
-                                              "images/png/profilePic.png",
-                                            ),
-                                            fit: BoxFit.fill,
-                                          )),
-                                      SizedBox(
-                                        width: 10,
+                        return true;
+                      },
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                    height: 53,
+                                    width: 53,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(26),
+                                        border: Border.all(
+                                            color: primaryColors, width: 1)),
+                                    child: Image(
+                                      image: AssetImage(
+                                        "images/png/profilePic.png",
                                       ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                      fit: BoxFit.fill,
+                                    )),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextWidget(
+                                      text: "Welcome",
+                                      textSize: 15,
+                                      fontWeight: FontWeight.w700,
+                                      color: textColorGrey,
+                                      maxline: 1,
+                                      align: TextAlign.left,
+                                    ),
+                                    TextWidget(
+                                      text: "Emily Cyrus",
+                                      textSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      color: textColorLigthtPink,
+                                      maxline: 1,
+                                      align: TextAlign.left,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            _babysettingServicesPoster(),
+                            _currentBookingWidget(homeDataResponse),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            TextWidget(
+                              text: "Package",
+                              textSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: textColorBlack,
+                              maxline: 1,
+                              align: TextAlign.left,
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            ListView.separated(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    height: 124,
+                                    width: SizeConfig.fullWidth! * 0.85,
+                                    margin: const EdgeInsets.only(right: 32),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: index % 2 != 0
+                                            ? textColorLightBlue
+                                            : primaryColors),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 12,
+                                          right: 7,
+                                          top: 12,
+                                          bottom: 15),
+                                      child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          TextWidget(
-                                            text: "Welcome",
-                                            textSize: 15,
-                                            fontWeight: FontWeight.w700,
-                                            color: textColorGrey,
-                                            maxline: 1,
-                                            align: TextAlign.left,
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Image.asset(
+                                                "images/png/calender.png",
+                                                width: 24.5,
+                                                height: 24.5,
+                                                color: index % 2 != 0
+                                                    ? textColorWhite
+                                                    : textColorLigthtPink,
+                                              ),
+                                              // Icon(
+                                              //   Icons
+                                              //       .calendar_view_week_rounded,
+                                              //   color: index % 2 != 0
+                                              //       ? textColorWhite
+                                              //       : textColorLigthtPink,
+                                              //   size: 25,
+                                              // ),
+                                              Container(
+                                                width: 72,
+                                                height: 22,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    color: index % 2 != 0
+                                                        ? textColorBlue
+                                                        : textColorLigthtPink),
+                                                alignment: Alignment.center,
+                                                child: TextWidget(
+                                                  text: 'Book Now',
+                                                  textSize: 12,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: textColorWhite,
+                                                  maxline: 1,
+                                                  align: TextAlign.center,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 18,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              TextWidget(
+                                                text: homeDataResponse
+                                                    .packages![index]
+                                                    .packageName!,
+                                                textSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: textColorParple,
+                                                maxline: 1,
+                                                align: TextAlign.center,
+                                              ),
+                                              TextWidget(
+                                                text:
+                                                    '₹ ${homeDataResponse.packages![index].price!}',
+                                                textSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                                color: textColorParple,
+                                                maxline: 1,
+                                                align: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 8,
                                           ),
                                           TextWidget(
-                                            text: "Emily Cyrus",
-                                            textSize: 18,
-                                            fontWeight: FontWeight.w700,
-                                            color: textColorLigthtPink,
-                                            maxline: 1,
+                                            text: homeDataResponse
+                                                .packages![index].description!,
+                                            textSize: 10,
+                                            fontWeight: FontWeight.w400,
+                                            color: textColorParple,
+                                            maxline: 2,
                                             align: TextAlign.left,
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-                                  _babysettingServicesPoster(),
-                                  _currentBookingWidget(homeDataResponse),
-                                  SizedBox(
-                                    height: 16,
-                                  ),
-                                  TextWidget(
-                                    text: "Package",
-                                    textSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                    color: textColorBlack,
-                                    maxline: 1,
-                                    align: TextAlign.left,
-                                  ),
-                                  SizedBox(
+                                    ),
+                                  );
+                                },
+                                separatorBuilder: (context, ind) {
+                                  return SizedBox(
                                     height: 15,
-                                  ),
-                                  ListView.separated(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context, index) {
-                                        return Container(
-                                          height: 124,
-                                          width: SizeConfig.fullWidth! * 0.85,
-                                          margin:
-                                              const EdgeInsets.only(right: 32),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              color: index % 2 != 0
-                                                  ? textColorLightBlue
-                                                  : primaryColors),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 12,
-                                                right: 7,
-                                                top: 12,
-                                                bottom: 15),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Image.asset(
-                                                      "images/png/calender.png",
-                                                      width: 24.5,
-                                                      height: 24.5,
-                                                      color: index % 2 != 0
-                                                          ? textColorWhite
-                                                          : textColorLigthtPink,
-                                                    ),
-                                                    // Icon(
-                                                    //   Icons
-                                                    //       .calendar_view_week_rounded,
-                                                    //   color: index % 2 != 0
-                                                    //       ? textColorWhite
-                                                    //       : textColorLigthtPink,
-                                                    //   size: 25,
-                                                    // ),
-                                                    Container(
-                                                      width: 72,
-                                                      height: 22,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(15),
-                                                          color: index % 2 != 0
-                                                              ? textColorBlue
-                                                              : textColorLigthtPink),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: TextWidget(
-                                                        text: 'Book Now',
-                                                        textSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: textColorWhite,
-                                                        maxline: 1,
-                                                        align: TextAlign.center,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 18,
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    TextWidget(
-                                                      text: homeDataResponse
-                                                          .packages![index]
-                                                          .packageName!,
-                                                      textSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: textColorParple,
-                                                      maxline: 1,
-                                                      align: TextAlign.center,
-                                                    ),
-                                                    TextWidget(
-                                                      text:
-                                                          '₹ ${homeDataResponse.packages![index].price!}',
-                                                      textSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: textColorParple,
-                                                      maxline: 1,
-                                                      align: TextAlign.center,
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 8,
-                                                ),
-                                                TextWidget(
-                                                  text: homeDataResponse
-                                                      .packages![index]
-                                                      .description!,
-                                                  textSize: 10,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: textColorParple,
-                                                  maxline: 2,
-                                                  align: TextAlign.left,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      separatorBuilder: (context, ind) {
-                                        return SizedBox(
-                                          height: 15,
-                                        );
-                                      },
-                                      itemCount:
-                                          homeDataResponse.packages!.length),
-                                  SizedBox(
-                                    height: 65,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return EmptyScreen();
-                      }
-                    }),
-              ),
-            )
-          : Container();
+                                  );
+                                },
+                                itemCount: homeDataResponse.packages!.length),
+                            SizedBox(
+                              height: 65,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return EmptyScreen();
+                }
+              }),
+        ),
+      );
     });
   }
 

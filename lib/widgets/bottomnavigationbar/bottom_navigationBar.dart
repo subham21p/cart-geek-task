@@ -4,6 +4,7 @@ import 'package:cart_greek/provider/connectivityProvider/connectivity_provider.d
 import 'package:cart_greek/provider/futuredataProvider/futureDataProvider.dart';
 import 'package:cart_greek/screens/bookingScreen/booking.dart';
 import 'package:cart_greek/screens/homeScreen/home.dart';
+import 'package:cart_greek/screens/noInternetScreen/noInternetConnection.dart';
 import 'package:cart_greek/screens/packageScreen/package.dart';
 import 'package:cart_greek/screens/profileScreen/profile.dart';
 import 'package:cart_greek/utils/colors/colors.dart';
@@ -386,8 +387,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     ? AppBar(
                         elevation: 0,
                         backgroundColor: textColorWhite,
-
+                        automaticallyImplyLeading: false,
                         centerTitle: true,
+
                         actions: [
                           Padding(
                             padding: const EdgeInsets.only(right: 15),
@@ -412,52 +414,45 @@ class _BottomNavBarState extends State<BottomNavBar> {
                         //  leading:
                       )
                     : null,
-                body: Container(
-                  //  color: primaryColors,
-                  child: PersistentTabView(
-                    context,
-                    controller: _controller,
-                    screens: _buildScreens(),
-                    items: _navBarsItems(),
-                    confineInSafeArea: true,
-                    backgroundColor: Colors.white.withOpacity(0.7),
-                    handleAndroidBackButtonPress: true,
-                    resizeToAvoidBottomInset: true,
-                    stateManagement: true,
-                    navBarHeight: 60,
-                    //  MediaQuery.of(context).viewInsets.bottom > 0
-                    //     ? 0.0
-                    //     : kBottomNavigationBarHeight,
-                    hideNavigationBarWhenKeyboardShows: true,
-                    margin: EdgeInsets.all(0.0),
-                    popActionScreens: PopActionScreensType.all,
-                    bottomScreenMargin: 0.0,
-                    onWillPop: (context) async {
-                      value =
-                          await showExitPopup(context!, SizeConfig.fullWidth!);
-                      return value;
-                    },
-
-                    hideNavigationBar: _hideNavBar,
-                    decoration: NavBarDecoration(
-                      colorBehindNavBar: Colors.indigo,
-                    ),
-                    popAllScreensOnTapOfSelectedTab: true,
-                    itemAnimationProperties: ItemAnimationProperties(
-                      duration: Duration(milliseconds: 400),
-                      curve: Curves.ease,
-                    ),
-                    screenTransitionAnimation: ScreenTransitionAnimation(
-                      animateTabTransition: true,
-                      curve: Curves.ease,
-                      duration: Duration(milliseconds: 200),
-                    ),
-                    navBarStyle: NavBarStyle.style12,
+                body: PersistentTabView(
+                  context,
+                  controller: _controller,
+                  screens: _buildScreens(),
+                  items: _navBarsItems(),
+                  confineInSafeArea: true,
+                  backgroundColor: Colors.white.withOpacity(0.7),
+                  handleAndroidBackButtonPress: true,
+                  resizeToAvoidBottomInset: true,
+                  stateManagement: true,
+                  navBarHeight: 60,
+                  hideNavigationBarWhenKeyboardShows: true,
+                  margin: EdgeInsets.all(0.0),
+                  popActionScreens: PopActionScreensType.all,
+                  bottomScreenMargin: 0.0,
+                  onWillPop: (context) async {
+                    value =
+                        await showExitPopup(context!, SizeConfig.fullWidth!);
+                    return value;
+                  },
+                  hideNavigationBar: _hideNavBar,
+                  decoration: NavBarDecoration(
+                    colorBehindNavBar: Colors.indigo,
                   ),
+                  popAllScreensOnTapOfSelectedTab: true,
+                  itemAnimationProperties: ItemAnimationProperties(
+                    duration: Duration(milliseconds: 400),
+                    curve: Curves.ease,
+                  ),
+                  screenTransitionAnimation: ScreenTransitionAnimation(
+                    animateTabTransition: true,
+                    curve: Curves.ease,
+                    duration: Duration(milliseconds: 200),
+                  ),
+                  navBarStyle: NavBarStyle.style12,
                 ),
               ),
             )
-          : Container();
+          : NoInternetscreen();
     });
     //);
     //  : NoInternetscreen();
